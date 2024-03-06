@@ -19,4 +19,8 @@ export class AuthRepository {
     user.password = hashedPassword;
     return await this.repository.save(user);
   }
+
+  async findByEmail(email: string): Promise<UserModel> {
+    return await this.repository.findOneBy({ email });
+  }
 }
