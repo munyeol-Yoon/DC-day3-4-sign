@@ -5,7 +5,7 @@ import { UserReqDto } from './dto/user.req.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
-export class AuthRepository {
+export class UserRepository {
   constructor(
     @InjectRepository(UserModel)
     private readonly repository: Repository<UserModel>,
