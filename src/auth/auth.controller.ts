@@ -12,11 +12,13 @@ export class AuthController {
     const user = await this.userService.createUser(body);
 
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      accessToken: user['accessToken'],
+      refreshToken: user['refreshToken'],
+      id: user['id'],
+      name: user['name'],
+      email: user['email'],
+      createdAt: user['createdAt'],
+      updatedAt: user['updatedAt'],
     };
   }
 }
