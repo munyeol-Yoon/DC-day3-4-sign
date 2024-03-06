@@ -34,7 +34,6 @@ export class UserModel extends BaseModel {
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,30}$/)
   @Column({
     type: 'varchar',
-    length: 60,
   })
   password: string;
 }

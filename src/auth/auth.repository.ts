@@ -11,8 +11,12 @@ export class AuthRepository {
     private readonly repository: Repository<UserModel>,
   ) {}
 
-  async createUser(dto: UserReqDto): Promise<UserModel> {
+  async createUser(
+    dto: UserReqDto,
+    hashedPassword: string,
+  ): Promise<UserModel> {
     const user = this.repository.create(dto);
+    user.password = hashedPassword;
     return await this.repository.save(user);
   }
 }
