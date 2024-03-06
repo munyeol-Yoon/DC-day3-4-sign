@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 import { BaseModel } from 'src/common/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 
@@ -15,6 +15,7 @@ export class UserModel extends BaseModel {
   @IsEmail()
   @IsNotEmpty()
   @Column({
+    unique: true,
     type: 'varchar',
     length: 30,
   })
@@ -30,6 +31,7 @@ export class UserModel extends BaseModel {
 
   @IsString()
   @IsNotEmpty()
+  @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*()]).{8,30}$/)
   @Column({
     type: 'varchar',
     length: 60,
