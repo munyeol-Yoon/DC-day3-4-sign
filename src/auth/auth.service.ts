@@ -4,7 +4,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { AuthRepository } from './auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
-import { Payload, Tokens } from './types/types';
+import { AccessToken, Payload, RefreshToken, Tokens } from './types/types';
 import { CustomException } from 'src/http-exception/custom-exception';
 import { LoginReqDto } from './dto/login.req.dto';
 import * as argon2 from 'argon2';
@@ -94,5 +94,33 @@ export class AuthService {
     });
 
     return token;
+  }
+
+  async accessTokenRefresh(token: RefreshToken): Promise<AccessToken> {
+    // 리프레쉬토큰 검증
+    const refreshToken = token.refreshToken;
+    const { exp, ...payload } = await this.jwtService.verifyAsync(
+      refreshToken,
+      {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      },
+    );
+
+    // 토큰 일치여부 확인
+    const user = await this.userRepository.findOne(payload.sub);
+    if (!user) {
+      throw new CustomException(
+        'auth',
+        '유저 존재하지 않음',
+        '유저 존재하지 않음',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    // 액세스 토큰 생성
+    const accessToken = await this.createAccessToken(payload);
+    // 액세스 토큰 반환
+
+    return { accessToken };
   }
 }

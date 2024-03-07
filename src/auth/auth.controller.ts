@@ -4,7 +4,7 @@ import { UserReqDto } from './dto/user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
 import { LoginReqDto } from './dto/login.req.dto';
 import { AuthService } from './auth.service';
-import { Tokens } from './types/types';
+import { AccessToken, RefreshToken, Tokens } from './types/types';
 
 @Controller('auth')
 export class AuthController {
@@ -31,5 +31,10 @@ export class AuthController {
   @Post('login')
   async login(@Body() body: LoginReqDto): Promise<Tokens> {
     return await this.authService.login(body);
+  }
+
+  @Post('refresh')
+  async refresh(@Body() body: RefreshToken): Promise<AccessToken> {
+    return await this.authService.accessTokenRefresh(body);
   }
 }
