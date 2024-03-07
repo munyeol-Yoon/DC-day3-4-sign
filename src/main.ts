@@ -3,9 +3,12 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { CustomExceptionFilter } from './http-exception/exception.filter';
 import { CustomException } from './http-exception/custom-exception';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,7 +26,7 @@ async function bootstrap() {
       },
     }),
   );
-  app.useGlobalFilters(new CustomExceptionFilter());
+  app.useGlobalFilters(new CustomExceptionFilter(logger));
 
   await app.listen(process.env.PORT);
 }
