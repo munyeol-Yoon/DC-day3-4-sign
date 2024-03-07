@@ -3,3 +3,8 @@ export type Payload = {
   iat: number;
   jti: string;
 };
+
+export type Tokens = {
+  accessToken: string;
+  refreshToken: string;
+};

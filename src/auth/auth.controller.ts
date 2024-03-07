@@ -2,10 +2,16 @@ import { Body, Controller, Post } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserReqDto } from './dto/user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
+import { LoginReqDto } from './dto/login.req.dto';
+import { AuthService } from './auth.service';
+import { Tokens } from './types/types';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Post('signup')
   async signUp(@Body() body: UserReqDto): Promise<UserResDto> {
@@ -20,5 +26,10 @@ export class AuthController {
       createdAt: user['createdAt'],
       updatedAt: user['updatedAt'],
     };
+  }
+
+  @Post('login')
+  async login(@Body() body: LoginReqDto): Promise<Tokens> {
+    return await this.authService.login(body);
   }
 }
