@@ -31,16 +31,7 @@ export class AuthService {
     }
 
     // 비밀번호 일치여부 확인
-    const verifyUser = await argon2.verify(user.password, dto.password);
-
-    if (!verifyUser) {
-      throw new CustomException(
-        'user',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        '이메일 또는 비밀번호가 일치하지 않습니다.',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // await this.checkPassword(user.password, dto.password);
 
     // 토큰 발급
     const payload = this.createTokenPayload(user.id);
@@ -52,6 +43,23 @@ export class AuthService {
 
     // 토큰 보내주기
     return { accessToken, refreshToken };
+  }
+
+  async checkPassword(
+    password: string,
+    savedPassword: string,
+  ): Promise<boolean> {
+    const verifyUser = await argon2.verify(password, savedPassword);
+    if (!verifyUser) {
+      throw new CustomException(
+        'user',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        '이메일 또는 비밀번호가 일치하지 않습니다.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return verifyUser;
   }
 
   createTokenPayload(userId: string): Payload {
