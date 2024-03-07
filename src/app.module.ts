@@ -5,7 +5,7 @@ import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
-import { LoggerModule } from './logger,module';
+import { LoggerModule } from './logger.module';
 
 @Module({
   imports: [
