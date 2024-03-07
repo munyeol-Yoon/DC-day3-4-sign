@@ -18,9 +18,12 @@ export type ApiError = {
   timestamp: Date;
 };
 
-@Catch()
-export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: Error, host: ArgumentsHost) {
+@Catch(Error, CustomException, HttpException)
+export class CustomExceptionFilter implements ExceptionFilter {
+  catch(
+    exception: Error | CustomException | HttpException,
+    host: ArgumentsHost,
+  ) {
     let status: HttpStatus;
     let body: ApiError;
 
