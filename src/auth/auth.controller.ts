@@ -1,10 +1,11 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserReqDto } from './dto/user.req.dto';
 import { UserResDto } from './dto/user.res.dto';
 import { LoginReqDto } from './dto/login.req.dto';
 import { AuthService } from './auth.service';
 import { AccessToken, RefreshToken, Tokens } from './types/types';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,5 +37,11 @@ export class AuthController {
   @Post('refresh')
   async refresh(@Body() body: RefreshToken): Promise<AccessToken> {
     return await this.authService.accessTokenRefresh(body);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('profile')
+  async profile() {
+    return '개인정보 받아랏';
   }
 }
