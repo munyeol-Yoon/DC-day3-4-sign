@@ -5,7 +5,6 @@ import { UserRepository } from './user.repository';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModel } from './entities/user.entity';
 import { AuthService } from './auth.service';
-import { AuthRepository } from './auth.repository';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
@@ -23,12 +22,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    UserService,
-    UserRepository,
-    AuthService,
-    AuthRepository,
-    JwtService,
-  ],
+  providers: [UserService, UserRepository, AuthService, JwtService],
 })
 export class AuthModule {}

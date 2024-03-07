@@ -1,7 +1,6 @@
 import { UserRepository } from './user.repository';
 import { ConfigService } from '@nestjs/config';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { AuthRepository } from './auth.repository';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuid } from 'uuid';
 import { AccessToken, Payload, RefreshToken, Tokens } from './types/types';
@@ -14,7 +13,6 @@ export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
-    private readonly authRepository: AuthRepository,
     private readonly userRepository: UserRepository,
   ) {}
 
