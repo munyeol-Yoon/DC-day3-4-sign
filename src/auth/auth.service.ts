@@ -98,9 +98,32 @@ export class AuthService {
 
   async accessTokenRefresh(token: RefreshToken): Promise<AccessToken> {
     // 리프레쉬토큰 검증
-    const refreshToken = token.refreshToken;
+    const payload = await this.tokenValidation(token);
+    // 액세스 토큰 생성
+    const accessToken = await this.createAccessToken(payload);
+    // 액세스 토큰 반환
+
+    return { accessToken };
+  }
+
+  async tokenValidation(token: {
+    refreshToken?: string;
+    accessToken?: string;
+  }): Promise<Payload> {
+    const currentToken = token.refreshToken || token.accessToken;
+    if (!currentToken) {
+      throw new CustomException(
+        'auth',
+        '토큰이 제공되지 않음',
+        '토큰이 제공되지 않음',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    console.log(currentToken);
+
     const { exp, ...payload } = await this.jwtService.verifyAsync(
-      refreshToken,
+      currentToken,
       {
         secret: this.configService.get<string>('JWT_SECRET'),
       },
@@ -117,10 +140,6 @@ export class AuthService {
       );
     }
 
-    // 액세스 토큰 생성
-    const accessToken = await this.createAccessToken(payload);
-    // 액세스 토큰 반환
-
-    return { accessToken };
+    return payload;
   }
 }

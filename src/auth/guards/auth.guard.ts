@@ -1,23 +1,15 @@
 import {
   CanActivate,
   ExecutionContext,
-  HttpStatus,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Observable } from 'rxjs';
-import { UserRepository } from '../user.repository';
-import { CustomException } from 'src/http-exception/custom-exception';
-import { ConfigService } from '@nestjs/config';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(
-    private jwtService: JwtService,
-    private userRepository: UserRepository,
-    private configService: ConfigService,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   canActivate(
     context: ExecutionContext,
@@ -41,25 +33,11 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Invalid token.');
     }
 
-    try {
-      // 페이로드 확인
-      const { exp, ...payload } = await this.jwtService.verifyAsync(token, {
-        secret: this.configService.get<string>('JWT_SECRET'),
-      });
-      // 토큰 일치여부 확인
-      const user = await this.userRepository.findOne(payload.sub);
-      if (!user) {
-        throw new CustomException(
-          'auth',
-          '유저 존재하지 않음',
-          '유저 존재하지 않음',
-          HttpStatus.UNAUTHORIZED,
-        );
-      }
+    // 토큰 검증
+    await this.authService.tokenValidation({
+      accessToken: token,
+    });
 
-      return true;
-    } catch (error) {
-      throw new UnauthorizedException('토큰 검증 실해');
-    }
+    return true;
   }
 }
