@@ -4,6 +4,11 @@ export const validationSchema = Joi.object({
   // env
   PORT: Joi.number().required(),
 
+  // logger
+  NODE_ENV: Joi.string().required(),
+  APP_NAME: Joi.string().required(),
+  LOG_DIR: Joi.string().required(),
+
   // jwt
   JWT_SECRET: Joi.string().required(),
   JWT_EXPIRES: Joi.string().required(),
